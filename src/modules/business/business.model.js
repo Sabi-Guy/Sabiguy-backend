@@ -34,13 +34,19 @@ const businessSchema = new mongoose.Schema(
     lastResetOtpSentAt: { type: Date, default: null },
     emailVerificationExpires: { type: Date },
     fullName: { type: String },
-    accountType: { type: String,  enum: ["individual", "business"], required: true},
-    BusinessName: { type: String,},
+    accountType: {
+      type: String,
+      enum: ['individual', 'business'],
+      required: true,
+    },
+    BusinessName: { type: String },
     regNumber: { type: String },
     BusinessAddress: { type: String },
     cacFile: { type: String },
     ninSlip: { type: String },
     cityOfOperation: { type: String },
+    businessCategory: { type: String, required: true },
+    businessPhotos: [{ type: String }],
     vehicles: [
       {
         name: { type: String },
