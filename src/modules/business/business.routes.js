@@ -8,6 +8,7 @@ const {
   getBusinessByEmail,
   respondToInvitation,
   addBusinessDetails,
+  addBusinessVerification,
   addVehicleDetails,
   getKycLevel,
 } = require("./business.controller");
@@ -57,30 +58,28 @@ router.get("/getAllBusinesses", authMiddleware, getAllBusinesses);
  *             type: object
  *             required:
  *               - businessName
- *               - cacRegistrationNumber
  *               - businessAddress
  *               - cityOfOperation
- *               - cacCertificateUrl
- *               - nin
+ *               - ninUrl
+ *               - businessCategory
  *             properties:
  *               businessName:
  *                 type: string
  *                 example: "ABC Logistics"
- *               cacRegistrationNumber:
- *                 type: string
- *                 example: "RC123456"
  *               businessAddress:
  *                 type: string
  *                 example: "12 Allen Avenue"
  *               cityOfOperation:
  *                 type: string
  *                 example: "Lagos"
- *               cacCertificateUrl:
+ *               ninUrl:
  *                 type: string
- *                 example: "https://res.cloudinary.com/demo/image/upload/v123456/cac-certificate.pdf"
- *               nin:
+ *                 description: URL of the NIN slip/document
+ *                 example: "https://res.cloudinary.com/demo/image/upload/v123456/nin-slip.jpg"
+ *               businessCategory:
  *                 type: string
- *                 example: "12345678901"
+ *                 description: Category of the business
+ *                 example: "Transport & Logistics"
  *     responses:
  *       201:
  *         description: Business details created successfully
@@ -100,6 +99,58 @@ router.post(
   authMiddleware,
   onlyRole("businessOwner"),
   addBusinessDetails,
+);
+
+/**
+ * @swagger
+ * /api/v1/businesses/business-verification:
+ *   post:
+ *     summary: Submit business verification documents and photos
+ *     tags: [Business]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - cacCertificateUrl
+ *               - profilePhotoUrl
+ *               - businessPhotos
+ *             properties:
+ *               cacCertificateUrl:
+ *                 type: string
+ *                 description: URL of the business CAC certificate
+ *                 example: "https://res.cloudinary.com/demo/image/upload/v123456/cac-certificate.pdf"
+ *               profilePhotoUrl:
+ *                 type: string
+ *                 description: URL of the business profile photo
+ *                 example: "https://res.cloudinary.com/demo/image/upload/v123456/profile.jpg"
+ *               businessPhotos:
+ *                 type: array
+ *                 description: URLs of business/store photos
+ *                 items:
+ *                   type: string
+ *                   example: "https://res.cloudinary.com/demo/image/upload/v123456/store-1.jpg"
+ *     responses:
+ *       201:
+ *         description: Business verification details saved successfully
+ *       400:
+ *         description: Missing or invalid fields
+ *       401:
+ *         description: Invalid or missing token
+ *       403:
+ *         description: Business access only
+ *       404:
+ *         description: Business not found
+ */
+router.post(
+  "/business-verification",
+  authMiddleware,
+  onlyRole("businessOwner"),
+  addBusinessVerification,
 );
 
 /**

@@ -232,6 +232,24 @@ const addBusinessDetails = async (req, res) => {
   }
 };
 
+// POST /business-verification — submit business verification documents and photos.
+const addBusinessVerification = async (req, res) => {
+  try {
+    const verification = await businessService.addBusinessVerification(
+      req.user.id,
+      req.body,
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: 'Business verification details saved successfully',
+      data: verification,
+    });
+  } catch (error) {
+    return handleServiceError(res, error, 'Failed to save business verification details');
+  }
+};
+
 // POST /vehicle-details — add one or more vehicles for the authenticated business owner.
 const addVehicleDetails = async (req, res) => {
   try {
@@ -307,6 +325,7 @@ module.exports = {
   getBusinessByEmail,
   respondToInvitation,
   addBusinessDetails,
+  addBusinessVerification,
   addVehicleDetails,
   getKycLevel
 };
