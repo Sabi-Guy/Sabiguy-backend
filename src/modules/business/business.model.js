@@ -45,7 +45,7 @@ const businessSchema = new mongoose.Schema(
     cacFile: { type: String },
     ninSlip: { type: String },
     cityOfOperation: { type: String },
-    businessCategory: { type: String, required: true },
+    businessCategory: { type: String, required: false, default: null },
     businessPhotos: [{ type: String }],
     vehicles: [
       {
