@@ -1,5 +1,5 @@
 const Groq = require("groq-sdk");
-const Booking = require("../bookings/bookings.model");
+const Booking = require("../bookings/bookings.model.js");
 
 const groq = process.env.GROQ_API_KEY
   ? new Groq({
