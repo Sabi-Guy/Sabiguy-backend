@@ -268,20 +268,18 @@ const isValidUrl = (value) => {
 const addBusinessDetails = async (businessId, payload) => {
   const {
     businessName,
-    cacRegistrationNumber,
     businessAddress,
     cityOfOperation,
-    cacCertificateUrl,
-    nin,
+    ninUrl,
+    businessCategory,
   } = payload;
 
   const requiredFields = {
     businessName,
-    cacRegistrationNumber,
     businessAddress,
     cityOfOperation,
-    cacCertificateUrl,
-    nin,
+    ninUrl,
+    businessCategory,
   };
 
   const missingField = Object.entries(requiredFields).find(
@@ -291,8 +289,8 @@ const addBusinessDetails = async (businessId, payload) => {
     throw new ValidationError(`${missingField[0]} is required`);
   }
 
-  if (!isValidUrl(cacCertificateUrl)) {
-    throw new ValidationError("cacCertificateUrl must be a valid URL");
+  if (!isValidUrl(ninUrl)) {
+    throw new ValidationError("ninUrl must be a valid URL");
   }
 
   const business = await businessRepository.findBusinessById(businessId);
@@ -309,25 +307,82 @@ const addBusinessDetails = async (businessId, payload) => {
 
   const updated = await businessRepository.saveBusinessDetails(businessId, {
     BusinessName: businessName,
-    regNumber: cacRegistrationNumber,
     BusinessAddress: businessAddress,
     cityOfOperation,
-    cacFile: cacCertificateUrl,
-    ninSlip: nin,
+    ninSlip: ninUrl,
+    businessCategory,
     kycLevel: Math.max(business.kycLevel || 0, 2),
   });
 
   return {
     businessName: updated.BusinessName,
-    cacRegistrationNumber: updated.regNumber,
     businessAddress: updated.BusinessAddress,
     cityOfOperation: updated.cityOfOperation,
-    cacCertificateUrl: updated.cacFile,
-    nin: updated.ninSlip,
+    ninUrl: updated.ninSlip,
+    businessCategory: updated.businessCategory,
   };
 };
 
-// 6. Add one or more vehicles for the authenticated business owner.
+// 6. Submit business verification documents and photos.
+const addBusinessVerification = async (businessId, payload) => {
+  const { cacCertificateUrl, profilePhotoUrl, businessPhotos } = payload;
+
+  const requiredFields = {
+    cacCertificateUrl,
+    profilePhotoUrl,
+    businessPhotos,
+  };
+
+  const missingField = Object.entries(requiredFields).find(
+    ([, value]) => value === undefined || value === null || value === "",
+  );
+  if (missingField) {
+    throw new ValidationError(`${missingField[0]} is required`);
+  }
+
+  if (!isValidUrl(cacCertificateUrl)) {
+    throw new ValidationError("cacCertificateUrl must be a valid URL");
+  }
+
+  if (!isValidUrl(profilePhotoUrl)) {
+    throw new ValidationError("profilePhotoUrl must be a valid URL");
+  }
+
+  if (!Array.isArray(businessPhotos) || businessPhotos.length === 0) {
+    throw new ValidationError("businessPhotos must be a non-empty array");
+  }
+
+  businessPhotos.forEach((photoUrl, index) => {
+    if (!isValidUrl(photoUrl)) {
+      throw new ValidationError(
+        `businessPhotos[${index}] must be a valid URL`,
+      );
+    }
+  });
+
+  const business = await businessRepository.findBusinessById(businessId);
+  if (!business || business.isDeleted) {
+    throw new NotFoundError("Business not found");
+  }
+
+  const updated = await businessRepository.saveBusinessVerificationDetails(
+    businessId,
+    {
+      cacFile: cacCertificateUrl,
+      profilePicture: profilePhotoUrl,
+      businessPhotos,
+      kycLevel: Math.max(business.kycLevel || 0, 3),
+    },
+  );
+
+  return {
+    cacCertificateUrl: updated.cacFile,
+    profilePhotoUrl: updated.profilePicture,
+    businessPhotos: updated.businessPhotos,
+  };
+};
+
+// 7. Add one or more vehicles for the authenticated business owner.
 const addVehicleDetails = async (businessId, vehicles) => {
   if (!Array.isArray(vehicles) || vehicles.length === 0) {
     throw new ValidationError("vehicles must be a non-empty array");
@@ -379,7 +434,7 @@ const addVehicleDetails = async (businessId, vehicles) => {
     newVehicles,
     {
       kycCompleted: true,
-      kycLevel: Math.max(business.kycLevel || 0, 3),
+      kycLevel: Math.max(business.kycLevel || 0, 4),
     },
   );
 
@@ -400,6 +455,7 @@ module.exports = {
   getBusinessVehicles,
   getBusinessByEmail,
   addBusinessDetails,
+  addBusinessVerification,
   addVehicleDetails,  
   respondToInvitation,
   ValidationError,

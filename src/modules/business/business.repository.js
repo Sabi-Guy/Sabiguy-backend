@@ -95,6 +95,13 @@ const saveBusinessDetails = (businessId, details) =>
     { new: true, runValidators: true },
   );
 
+const saveBusinessVerificationDetails = (businessId, details) =>
+  Business.findByIdAndUpdate(
+    businessId,
+    { $set: details },
+    { new: true, runValidators: true },
+  );
+
 const addVehiclesToBusiness = (businessId, vehicles, updates = {}) =>
   Business.findByIdAndUpdate(
     businessId,
@@ -117,5 +124,6 @@ module.exports = {
   getBusinessVehiclesPage,
   addDriverToBusiness,
   saveBusinessDetails,
+  saveBusinessVerificationDetails,
   addVehiclesToBusiness,
 };
