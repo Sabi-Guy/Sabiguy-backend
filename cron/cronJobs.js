@@ -6,7 +6,7 @@
 require("dotenv").config();
 const cron = require("node-cron");
 const connectToDB = require("../utils/db");
-const Booking = require("../src/modules/bookings/bookings.model");
+const Booking = require("../src/modules/bookings/bookings.model.js");
 const notificationService = require("./notificationService");
 const paymentService = require("../src/modules/payment/payment.service");
 

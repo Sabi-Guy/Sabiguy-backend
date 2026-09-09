@@ -1,6 +1,6 @@
 const axios = require("axios");
 const WalletService = require("./wallet.service.js");
-const Booking = require("../bookings/bookings.model");
+const Booking = require("../bookings/bookings.model.js");
 const NotificationService = require("../../services/notification.service.js");
 
 class WalletController {
