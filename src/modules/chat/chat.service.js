@@ -2,7 +2,7 @@
 
 const Chat = require("./chat.model");
 const notificationService = require("../../services/notification.service");
-const Booking = require("../bookings/bookings.model.js");
+const Booking = require("../bookings/Bookings.model.js");
 
 const ACTIVE_BOOKING_STATUSES = new Set([
   "paid_escrow",

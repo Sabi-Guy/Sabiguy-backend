@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Wallet = require("./Wallet.model");
 const Transaction = require("../transactions/transaction.model");
-const Booking = require("../bookings/bookings.model.js");
+const Booking = require("../bookings/Bookings.model.js");
 const Buyer = require("../../../models/ServiceUser");
 const discountService = require("../../services/discount.service");
 

@@ -359,7 +359,7 @@ class NotificationService {
 
   async notifyBookingTaken(bookingId, acceptedProviderId) {
     try {
-      const Booking = require("../modules/bookings/bookings.model.js");
+      const Booking = require("../modules/bookings/Bookings.model.js");
       const booking = await Booking.findById(bookingId);
 
       if (!booking || !booking.notifiedProviders) return;

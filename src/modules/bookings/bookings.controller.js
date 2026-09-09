@@ -1,4 +1,4 @@
-const Booking = require("./bookings.model.js");
+const Booking = require("./Bookings.model.js");
 const Provider = require("../../../models/ServiceProvider");
 const Buyer = require("../../../models/ServiceUser");
 const Chat = require("../chat/chat.model");
