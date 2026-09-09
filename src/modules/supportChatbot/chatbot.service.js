@@ -1,5 +1,5 @@
 const Groq = require("groq-sdk");
-const Booking = require("../bookings/Bookings.model");
+const Booking = require("../bookings/bookings.model");
 
 const groq = process.env.GROQ_API_KEY
   ? new Groq({
@@ -43,8 +43,14 @@ User's question: ${message}`;
 
       if (!groq) {
         return {
-          response: "I'm currently unavailable, but I can still help with general guidance while the AI service is being configured.",
-          intent: { intent: "general_faq", requiresAction: false, sentiment: "neutral", escalationNeeded: false },
+          response:
+            "I'm currently unavailable, but I can still help with general guidance while the AI service is being configured.",
+          intent: {
+            intent: "general_faq",
+            requiresAction: false,
+            sentiment: "neutral",
+            escalationNeeded: false,
+          },
           escalationTriggered: false,
           timestamp: new Date().toISOString(),
         };

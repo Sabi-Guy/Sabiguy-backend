@@ -2,7 +2,7 @@ const groqService = require("./chatbot.service.js");
 const SupportTicket = require("./chatbot.model.js");
 const Buyer = require("../../../models/ServiceUser.js");
 const Provider = require("../../../models/ServiceProvider");
-const Booking = require("../bookings/Bookings.model");
+const Booking = require("../bookings/bookings.model");
 const mongoose = require("mongoose");
 
 const CATEGORY_MAP = {
