@@ -300,7 +300,12 @@ class NotificationService {
 
       return notification;
     } catch (error) {
-      this.logNotificationError("notifyBusiness", businessId, "Business", error);
+      this.logNotificationError(
+        "notifyBusiness",
+        businessId,
+        "Business",
+        error,
+      );
       throw error;
     }
   }
@@ -354,7 +359,7 @@ class NotificationService {
 
   async notifyBookingTaken(bookingId, acceptedProviderId) {
     try {
-      const Booking = require("../modules/bookings/bookings.model");
+      const Booking = require("../modules/bookings/Bookings.model.js");
       const booking = await Booking.findById(bookingId);
 
       if (!booking || !booking.notifiedProviders) return;

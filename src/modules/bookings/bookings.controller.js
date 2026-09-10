@@ -1,4 +1,4 @@
-const Booking = require("./Bookings.model");
+const Booking = require("./Bookings.model.js");
 const Provider = require("../../../models/ServiceProvider");
 const Buyer = require("../../../models/ServiceUser");
 const Chat = require("../chat/chat.model");
@@ -24,7 +24,7 @@ const ELIGIBLE_ACTIVE_STATUSES = [
   "funds_released",
   "cancelled",
   "payment_pending",
-  "disputed",
+  "booking_expired",
 ]; // Bookings that count towards provider activity
 const DELETABLE_BOOKING_STATUSES = [
   "pending_providers",
